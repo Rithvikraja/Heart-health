@@ -275,4 +275,5 @@ with right_col:
     else:
         st.info("Calculate BMI to see your meter.")
 
-st.markdown("</div>", unsafe_allow_html=True).Gives me some ideas to improve this with new features
+st.markdown("</div>", unsafe_allow_html=True)
+
