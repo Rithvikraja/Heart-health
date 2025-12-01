@@ -7,12 +7,6 @@ from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib import colors
-from reportlab.graphics.shapes import Drawing, Rect
-from reportlab.graphics.charts.barcharts import HorizontalBarChart
-
 
 # -------------------------------------------
 # PAGE CONFIG + GLOBAL UI STYLING
@@ -160,7 +154,6 @@ gender_val = 1 if gender == "Male" else 0
 smoker_val = 1 if smoker == "Yes" else 0
 diab_val = 1 if diab == "Yes" else 0
 inp = [[age, gender_val, rest, hr, chol, stress, smoker_val, diab_val, bmi]]
-res = int(model.predict([user_input])[0])
 
 
 # Centered predict button
@@ -193,127 +186,44 @@ if predict_pressed:
 # Enhanced PDF Report (Platypus)
 # -------------------------------------------
 pdf_buffer = io.BytesIO()
-doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
+        c = canvas.Canvas(pdf_buffer, pagesize=letter)
+        c.setFont("Helvetica-Bold", 22)
+        c.drawString(50, 750, "Heart Health Report")
+        c.setFont("Helvetica", 14)
+        c.drawString(50, 720, f"Name: {name}")
+        c.drawString(50, 700, f"Age: {age}")
+        c.drawString(50, 680, f"Gender: {gender}")
+        c.drawString(50, 660, f"Rest BP: {rest}")
+        c.drawString(50, 640, f"Heart Rate: {hr}")
+        c.drawString(50, 620, f"Cholesterol: {chol}")
+        c.drawString(50, 600, f"Stress: {stress}")
+        c.drawString(50, 580, f"Smoker: {smoker}")
+        c.drawString(50, 560, f"Diabetes: {diab}")
+        c.drawString(50, 540, f"BMI: {bmi}")
+        c.setFont("Helvetica-Bold", 18)
+        c.drawString(50, 500, f"Prediction: {'High Risk' if res == 1 else 'Low Risk'}")
+        if res == 1:
+            c.setFont("Helvetica-Bold", 16)
+            c.drawString(50, 470, "Recommended Tips:")
+            c.setFont("Helvetica", 13)
+            tips = [
+                "• Daily 20–30 min walking.",
+                "• Eat more fruits & vegetables.",
+                "• Reduce salty & oily foods.",
+                "• Consider quitting smoking.",
+                "• Practice slow breathing.",
+                "• Maintain sleep schedule.",
+                "• Get regular checkups.",
+            ]
+            y = 450
+            for t in tips:
+                c.drawString(60, y, t)
+                y -= 20
+        c.save()
+        pdf_buffer.seek(0)
+        st.download_button(label="⬇ Download Report (PDF)", data=pdf_buffer, file_name="heart_report.pdf", mime="application/pdf", use_container_width=True)
+st.markdown("</div>", unsafe_allow_html=True)
 
-styles = getSampleStyleSheet()
-title_style = styles['Title']
-normal = styles['Normal']
-bold = styles['Heading4']
-
-story = []
-
-# HEADER + BRAND BAR
-story.append(Paragraph("Heart Health Report", title_style))
-story.append(Spacer(1, 12))
-
-# Branding color bar
-d = Drawing(400, 10)
-d.add(Rect(0, 0, 400, 10, fillColor=colors.red))
-story.append(d)
-story.append(Spacer(1, 12))
-
-# INPUT TABLE
-data = [
-    ["Name", name],
-    ["Age", age],
-    ["Gender", gender],
-    ["Resting BP", rest],
-    ["Heart Rate", hr],
-    ["Cholesterol", chol],
-    ["Stress Level", stress],
-    ["Smoker", smoker],
-    ["Diabetes", diab],
-    ["BMI", f"{bmi:.2f}"],
-]
-
-table = Table(data, colWidths=[120, 250])
-table.setStyle(TableStyle([
-    ("BACKGROUND", (0,0), (-1,0), colors.Color(0.95,0.95,0.95)),
-    ("BOX", (0,0), (-1,-1), 1, colors.black),
-    ("INNERGRID", (0,0), (-1,-1), 0.5, colors.grey),
-    ("FONTNAME", (0,0), (-1,-1), "Helvetica"),
-    ("FONTSIZE", (0,0), (-1,-1), 11),
-    ("BACKGROUND", (0,1), (0,-1), colors.lightgrey),
-]))
-story.append(Paragraph("<b>User Inputs</b>", bold))
-story.append(table)
-story.append(Spacer(1, 20))
-
-# HEART-RISK METER GRAPHIC
-story.append(Paragraph("<b>Heart Risk Meter</b>", bold))
-
-risk_value = 80 if res == 1 else 30
-
-chart_draw = Drawing(400, 60)
-bar = HorizontalBarChart()
-bar.x = 0
-bar.y = 0
-bar.height = 40
-bar.width = 350
-bar.data = [[risk_value]]
-bar.strokeColor = colors.black
-bar.valueAxis.valueMin = 0
-bar.valueAxis.valueMax = 100
-
-bar.bars[0].fillColor = colors.red if res == 1 else colors.green
-
-chart_draw.add(bar)
-story.append(chart_draw)
-story.append(Spacer(1, 20))
-
-# EXPLANATION SECTION
-story.append(Paragraph("<b>Prediction Result</b>", bold))
-risk_text = "High Risk" if res == 1 else "Low Risk"
-story.append(Paragraph(f"Your heart health prediction: <b>{risk_text}</b>", normal))
-story.append(Spacer(1, 12))
-
-# FEATURE EXPLANATION
-story.append(Paragraph("<b>How this model predicts heart risk</b>", bold))
-story.append(Paragraph("""
-The model evaluates several health signals:
-<ul>
-<li><b>Age</b> — Higher age increases risk</li>
-<li><b>Blood Pressure</b> — Elevated BP strains the heart</li>
-<li><b>Heart Rate</b> — Very high or very low values can be indicators</li>
-<li><b>Cholesterol</b> — Higher levels lead to artery blockage</li>
-<li><b>BMI</b> — Unhealthy weight increases strain</li>
-<li><b>Smoking & Diabetes</b> — Strong predictors of cardiac events</li>
-<li><b>Stress levels</b> — Chronic stress affects long-term heart function</li>
-</ul>
-""", normal))
-story.append(Spacer(1, 20))
-
-# TIPS SECTION
-if res == 1:
-    story.append(Paragraph("<b>Recommended Actions</b>", bold))
-    story.append(Paragraph("""
-    • Daily 20–30 minutes walking<br/>
-    • Reduce oily, salty, and fried foods<br/>
-    • Eat more vegetables, fruits, and whole grains<br/>
-    • Practice slow breathing or meditation<br/>
-    • Quit or reduce smoking<br/>
-    • Maintain consistent sleep<br/>
-    • Schedule regular checkups
-    """, normal))
-
-# BUILD PDF
-doc.build(story)
-
-pdf_buffer.seek(0)
-
-st.download_button(
-    label="⬇ Download Enhanced Report (PDF)",
-    data=pdf_buffer,
-    file_name="heart_report.pdf",
-    mime="application/pdf",
-    use_container_width=True
-)
-
-# -------------------------------------------
-# SECTION 4 — BMI CALCULATOR + METER
-# -------------------------------------------
-st.markdown("<div class='block-card'>", unsafe_allow_html=True)
-left_col, right_col = st.columns([1.2, 1])
 
 # BMI CALCULATOR
 with left_col:
@@ -419,6 +329,7 @@ if st.button("Calculate Total Cholesterol"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 
 
