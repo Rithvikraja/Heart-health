@@ -155,7 +155,6 @@ smoker_val = 1 if smoker == "Yes" else 0
 diab_val = 1 if diab == "Yes" else 0
 inp = [[age, gender_val, rest, hr, chol, stress, smoker_val, diab_val, bmi]]
 
-
 # Centered predict button
 cA, cB, cC = st.columns([1, 2, 1])
 with cB:
@@ -182,10 +181,7 @@ if predict_pressed:
             st.success(f"✅Low Risk")
 
         # PDF report
-        # -------------------------------------------
-# Enhanced PDF Report (Platypus)
-# -------------------------------------------
-pdf_buffer = io.BytesIO()
+        pdf_buffer = io.BytesIO()
         c = canvas.Canvas(pdf_buffer, pagesize=letter)
         c.setFont("Helvetica-Bold", 22)
         c.drawString(50, 750, "Heart Health Report")
@@ -224,6 +220,11 @@ pdf_buffer = io.BytesIO()
         st.download_button(label="⬇ Download Report (PDF)", data=pdf_buffer, file_name="heart_report.pdf", mime="application/pdf", use_container_width=True)
 st.markdown("</div>", unsafe_allow_html=True)
 
+# -------------------------------------------
+# SECTION 4 — BMI CALCULATOR + METER
+# -------------------------------------------
+st.markdown("<div class='block-card'>", unsafe_allow_html=True)
+left_col, right_col = st.columns([1.2, 1])
 
 # BMI CALCULATOR
 with left_col:
@@ -274,62 +275,4 @@ with right_col:
     else:
         st.info("Calculate BMI to see your meter.")
 
-# -------------------------------------------
-# SECTION — CHOLESTEROL CALCULATOR
-# -------------------------------------------
-st.markdown("<div class='block-card'>", unsafe_allow_html=True)
-st.subheader("🩸 Cholesterol Calculator")
-
-colA, colB = st.columns(2)
-
-with colA:
-    hdl = st.number_input("HDL (Good Cholesterol)", 10, 120, step=1)
-    ldl = st.number_input("LDL (Bad Cholesterol)", 20, 250, step=1)
-    trig = st.number_input("Triglycerides", 30, 500, step=1)
-
-with colB:
-    st.markdown("### Formula")
-    st.markdown("""
-    **Total Cholesterol = HDL + LDL + (Triglycerides / 5)**  
-    """)
-
-if st.button("Calculate Total Cholesterol"):
-    total_chol = hdl + ldl + (trig / 5)
-    st.success(f"**Your Total Cholesterol: {total_chol:.1f} mg/dL**")
-
-    # Category Classification
-    if total_chol < 200:
-        level = "Desirable"
-        color = "green"
-        msg = "Healthy range. Maintain your lifestyle!"
-    elif 200 <= total_chol <= 239:
-        level = "Borderline High"
-        color = "orange"
-        msg = "A bit elevated. Watch your food choices."
-    else:
-        level = "High"
-        color = "red"
-        msg = "Risky level. Consider consulting a doctor."
-
-    st.markdown(f"""
-        <div style="
-            background:{color};
-            padding:14px;
-            border-radius:10px;
-            text-align:center;
-            font-size:20px;
-            font-weight:600;
-            color:white;
-            margin-top:10px;">
-            {level}
-        </div>
-        <div style="margin-top:8px; font-size:16px; color:#e5e7eb;">
-            {msg}
-        </div>
-    """, unsafe_allow_html=True)
-
-st.markdown("</div>", unsafe_allow_html=True)
-
-
-
-
+st.markdown("</div>", unsafe_allow_html=True).Gives me some ideas to improve this with new features
