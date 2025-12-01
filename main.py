@@ -160,6 +160,8 @@ gender_val = 1 if gender == "Male" else 0
 smoker_val = 1 if smoker == "Yes" else 0
 diab_val = 1 if diab == "Yes" else 0
 inp = [[age, gender_val, rest, hr, chol, stress, smoker_val, diab_val, bmi]]
+res = int(model.predict([user_input])[0])
+
 
 # Centered predict button
 cA, cB, cC = st.columns([1, 2, 1])
@@ -417,5 +419,6 @@ if st.button("Calculate Total Cholesterol"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 
