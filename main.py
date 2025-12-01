@@ -276,46 +276,6 @@ with right_col:
         st.info("Calculate BMI to see your meter.")
 
 # -------------------------------------------
-# SECTION — CHOLESTEROL CLASSIFIER
-# -------------------------------------------
-st.markdown("<div class='block-card'>", unsafe_allow_html=True)
-st.subheader("🩸 Cholesterol Level Classifier")
-
-chol_input = st.number_input("Enter your Cholesterol value (mg/dL)", 100, 400, step=1)
-
-if st.button("Check Cholesterol Category"):
-    if chol_input < 200:
-        level = "Desirable"
-        color = "green"
-        msg = "Your cholesterol is in a healthy range. Keep maintaining a balanced diet & active routine."
-    elif 200 <= chol_input <= 239:
-        level = "Borderline High"
-        color = "orange"
-        msg = "You're approaching the higher side. Monitor diet, reduce oily foods, and stay active."
-    else:
-        level = "High"
-        color = "red"
-        msg = "High cholesterol increases heart risk. Consider diet changes and consult a doctor if needed."
-
-    st.markdown(f"""
-        <div style="
-            background:{color};
-            padding:14px;
-            border-radius:10px;
-            text-align:center;
-            font-size:20px;
-            font-weight:600;
-            color:white;">
-            {level}
-        </div>
-        <div style="margin-top:10px; font-size:16px; color:#e5e7eb;">
-            {msg}
-        </div>
-    """, unsafe_allow_html=True)
-
-st.markdown("</div>", unsafe_allow_html=True)
-
-# -------------------------------------------
 # SECTION — CHOLESTEROL CALCULATOR
 # -------------------------------------------
 st.markdown("<div class='block-card'>", unsafe_allow_html=True)
@@ -370,3 +330,4 @@ if st.button("Calculate Total Cholesterol"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
+
