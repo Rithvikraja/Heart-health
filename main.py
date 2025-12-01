@@ -275,7 +275,14 @@ with right_col:
     else:
         st.info("Calculate BMI to see your meter.")
 
-st.markdown("</div>", unsafe_allow_html=True)
+# -------------------------------------------
+# SECTION — CHOLESTEROL CLASSIFIER
+# -------------------------------------------
+st.markdown("<div class='block-card'>", unsafe_allow_html=True)
+st.subheader("🩸 Cholesterol Level Classifier")
+
+chol_input = st.number_input("Enter your Cholesterol value (mg/dL)", 100, 400, step=1)
+
 if st.button("Check Cholesterol Category"):
     if chol_input < 200:
         level = "Desirable"
