@@ -314,3 +314,59 @@ if st.button("Check Cholesterol Category"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
+
+# -------------------------------------------
+# SECTION — CHOLESTEROL CALCULATOR
+# -------------------------------------------
+st.markdown("<div class='block-card'>", unsafe_allow_html=True)
+st.subheader("🩸 Cholesterol Calculator")
+
+colA, colB = st.columns(2)
+
+with colA:
+    hdl = st.number_input("HDL (Good Cholesterol)", 10, 120, step=1)
+    ldl = st.number_input("LDL (Bad Cholesterol)", 20, 250, step=1)
+    trig = st.number_input("Triglycerides", 30, 500, step=1)
+
+with colB:
+    st.markdown("### Formula")
+    st.markdown("""
+    **Total Cholesterol = HDL + LDL + (Triglycerides / 5)**  
+    """)
+
+if st.button("Calculate Total Cholesterol"):
+    total_chol = hdl + ldl + (trig / 5)
+    st.success(f"**Your Total Cholesterol: {total_chol:.1f} mg/dL**")
+
+    # Category Classification
+    if total_chol < 200:
+        level = "Desirable"
+        color = "green"
+        msg = "Healthy range. Maintain your lifestyle!"
+    elif 200 <= total_chol <= 239:
+        level = "Borderline High"
+        color = "orange"
+        msg = "A bit elevated. Watch your food choices."
+    else:
+        level = "High"
+        color = "red"
+        msg = "Risky level. Consider consulting a doctor."
+
+    st.markdown(f"""
+        <div style="
+            background:{color};
+            padding:14px;
+            border-radius:10px;
+            text-align:center;
+            font-size:20px;
+            font-weight:600;
+            color:white;
+            margin-top:10px;">
+            {level}
+        </div>
+        <div style="margin-top:8px; font-size:16px; color:#e5e7eb;">
+            {msg}
+        </div>
+    """, unsafe_allow_html=True)
+
+st.markdown("</div>", unsafe_allow_html=True)
