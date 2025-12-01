@@ -155,46 +155,6 @@ smoker_val = 1 if smoker == "Yes" else 0
 diab_val = 1 if diab == "Yes" else 0
 inp = [[age, gender_val, rest, hr, chol, stress, smoker_val, diab_val, bmi]]
 
-# -------------------------------------------
-# SECTION — CHOLESTEROL CLASSIFIER
-# -------------------------------------------
-st.markdown("<div class='block-card'>", unsafe_allow_html=True)
-st.subheader("🩸 Cholesterol Level Classifier")
-
-chol_input = st.number_input("Enter your Cholesterol value (mg/dL)", 100, 400, step=1)
-
-if st.button("Check Cholesterol Category"):
-    if chol_input < 200:
-        level = "Desirable"
-        color = "green"
-        msg = "Your cholesterol is in a healthy range. Keep maintaining a balanced diet & active routine."
-    elif 200 <= chol_input <= 239:
-        level = "Borderline High"
-        color = "orange"
-        msg = "You're approaching the higher side. Monitor diet, reduce oily foods, and stay active."
-    else:
-        level = "High"
-        color = "red"
-        msg = "High cholesterol increases heart risk. Consider diet changes and consult a doctor if needed."
-
-    st.markdown(f"""
-        <div style="
-            background:{color};
-            padding:14px;
-            border-radius:10px;
-            text-align:center;
-            font-size:20px;
-            font-weight:600;
-            color:white;">
-            {level}
-        </div>
-        <div style="margin-top:10px; font-size:16px; color:#e5e7eb;">
-            {msg}
-        </div>
-    """, unsafe_allow_html=True)
-
-st.markdown("</div>", unsafe_allow_html=True)
-
 # Centered predict button
 cA, cB, cC = st.columns([1, 2, 1])
 with cB:
@@ -316,4 +276,34 @@ with right_col:
         st.info("Calculate BMI to see your meter.")
 
 st.markdown("</div>", unsafe_allow_html=True)
+if st.button("Check Cholesterol Category"):
+    if chol_input < 200:
+        level = "Desirable"
+        color = "green"
+        msg = "Your cholesterol is in a healthy range. Keep maintaining a balanced diet & active routine."
+    elif 200 <= chol_input <= 239:
+        level = "Borderline High"
+        color = "orange"
+        msg = "You're approaching the higher side. Monitor diet, reduce oily foods, and stay active."
+    else:
+        level = "High"
+        color = "red"
+        msg = "High cholesterol increases heart risk. Consider diet changes and consult a doctor if needed."
 
+    st.markdown(f"""
+        <div style="
+            background:{color};
+            padding:14px;
+            border-radius:10px;
+            text-align:center;
+            font-size:20px;
+            font-weight:600;
+            color:white;">
+            {level}
+        </div>
+        <div style="margin-top:10px; font-size:16px; color:#e5e7eb;">
+            {msg}
+        </div>
+    """, unsafe_allow_html=True)
+
+st.markdown("</div>", unsafe_allow_html=True)
