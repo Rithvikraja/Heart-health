@@ -8,14 +8,6 @@ import matplotlib.pyplot as plt
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
-model = RandomForestClassifier(
-    n_estimators=300,
-    max_depth=8,
-    min_samples_split=4,
-    min_samples_leaf=2,
-    class_weight="balanced"
-)
-
 # -------------------------------------------
 # PAGE CONFIG + GLOBAL UI STYLING
 # -------------------------------------------
@@ -339,6 +331,7 @@ if st.button("Calculate Total Cholesterol"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 
 
