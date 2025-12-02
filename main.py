@@ -39,7 +39,7 @@ div.stButton > button:hover {
 # -------------------------------------------
 st.markdown("""
 <div style='text-align:center; margin-bottom: 20px;'>
-    <div style='font-size:40px; font-weight:700; color:Gold;'>❤️ Heart Health Studio</div>
+    <div style='font-size:40px; font-weight:700; color:Gold;'>🫀 Heart Health Studio</div>
     <div style='font-size:17px; color:#4b5563; margin-top:4px;'>A compact dashboard that turns your health numbers into quiet insights.</div>
 </div>
 """, unsafe_allow_html=True)
@@ -377,3 +377,4 @@ if st.button("Calculate Total Cholesterol"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
+
