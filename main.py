@@ -81,16 +81,13 @@ with c2:
 
 st.markdown("</div>", unsafe_allow_html=True)
 
-
-# ❤️ HEART INFORMATION SECTION (FULLY WORKING)
-
+# ❤️ HEART INFORMATION SECTION
 st.subheader("❤️ Heart Information")
 
 with st.expander("Click to expand — Learn about the heart, risks & wellness"):
     st.markdown("""
     ### 🫀 What the Heart Does
     The heart works around the clock — pushing blood, oxygen, and nutrients throughout your body.
-    It adjusts its rhythm quietly depending on your activity, stress, sleep, and emotions.
 
     ### ⚠ Common Risk Factors
     - High blood pressure  
@@ -131,8 +128,6 @@ if st.button("Train Model"):
     acc = accuracy_score(y_test, model.predict(X_test))
     st.success(f"Model trained! Accuracy: {acc*100:.2f}%")
 
-
-
 # -------------------------------------------
 # SECTION 3 — PREDICTOR
 # -------------------------------------------
@@ -155,7 +150,6 @@ smoker_val = 1 if smoker == "Yes" else 0
 diab_val = 1 if diab == "Yes" else 0
 inp = [[age, gender_val, rest, hr, chol, stress, smoker_val, diab_val, bmi]]
 
-# Centered predict button
 cA, cB, cC = st.columns([1, 2, 1])
 with cB:
     predict_pressed = st.button("Predict", use_container_width=True)
@@ -167,8 +161,39 @@ if predict_pressed:
         model = st.session_state["model"]
         res = model.predict(inp)[0]
 
+        # -------------------------------------------
+        # REASON GENERATOR (2–3 LINES)
+        # -------------------------------------------
+        reason_lines = []
+
+        if age > 50:
+            reason_lines.append("Your age increases overall cardiovascular sensitivity.")
+        if chol > 220:
+            reason_lines.append("Cholesterol levels are above the healthy range.")
+        if rest > 130:
+            reason_lines.append("Resting blood pressure appears elevated.")
+        if smoker_val == 1:
+            reason_lines.append("Smoking adds significant strain to heart function.")
+        if diab_val == 1:
+            reason_lines.append("Diabetes increases long-term heart complications.")
+        if bmi > 27:
+            reason_lines.append("BMI is high, adding extra workload on the heart.")
+        if stress >= 4:
+            reason_lines.append("Stress levels are high, which can influence heart rhythm.")
+        if hr > 100:
+            reason_lines.append("Heart rate is higher than the ideal resting range.")
+
+        short_reason = " ".join(reason_lines[:3])  # only take top 2–3 reasons
+
+        # -------------------------------------------
+        # DISPLAY PREDICTION + REASONS
+        # -------------------------------------------
         if res == 1:
-            st.error(f"⚠High Risk Detected")
+            st.error("⚠ High Risk Detected")
+
+            if short_reason:
+                st.write(f"**Why:** {short_reason}")
+
             st.warning("### Recommended Tips\n"
                        "- Walk 20–30 minutes daily.\n"
                        "- Eat more fruits, vegetables & whole grains.\n"
@@ -178,9 +203,11 @@ if predict_pressed:
                        "- Maintain consistent sleep.\n"
                        "- Get regular health checkups.\n")
         else:
-            st.success(f"✅Low Risk")
+            st.success("✅ Low Risk")
 
-        # PDF report
+        # -------------------------------------------
+        # PDF REPORT — INCLUDING REASONS
+        # -------------------------------------------
         pdf_buffer = io.BytesIO()
         c = canvas.Canvas(pdf_buffer, pagesize=letter)
         c.setFont("Helvetica-Bold", 22)
@@ -196,12 +223,23 @@ if predict_pressed:
         c.drawString(50, 580, f"Smoker: {smoker}")
         c.drawString(50, 560, f"Diabetes: {diab}")
         c.drawString(50, 540, f"BMI: {bmi}")
+
         c.setFont("Helvetica-Bold", 18)
         c.drawString(50, 500, f"Prediction: {'High Risk' if res == 1 else 'Low Risk'}")
+
         if res == 1:
             c.setFont("Helvetica-Bold", 16)
-            c.drawString(50, 470, "Recommended Tips:")
+            c.drawString(50, 470, "Reason:")
             c.setFont("Helvetica", 13)
+
+            y = 450
+            for line in reason_lines[:3]:
+                c.drawString(60, y, f"- {line}")
+                y -= 20
+
+            c.setFont("Helvetica-Bold", 16)
+            c.drawString(50, y - 20, "Recommendations:")
+            y -= 45
             tips = [
                 "• Daily 20–30 min walking.",
                 "• Eat more fruits & vegetables.",
@@ -211,13 +249,19 @@ if predict_pressed:
                 "• Maintain sleep schedule.",
                 "• Get regular checkups.",
             ]
-            y = 450
             for t in tips:
                 c.drawString(60, y, t)
-                y -= 20
+                y -= 18
+
         c.save()
         pdf_buffer.seek(0)
-        st.download_button(label="⬇ Download Report (PDF)", data=pdf_buffer, file_name="heart_report.pdf", mime="application/pdf", use_container_width=True)
+
+        st.download_button(label="⬇ Download Report (PDF)", 
+                           data=pdf_buffer, 
+                           file_name="heart_report.pdf", 
+                           mime="application/pdf",
+                           use_container_width=True)
+
 st.markdown("</div>", unsafe_allow_html=True)
 
 # -------------------------------------------
@@ -245,6 +289,7 @@ with right_col:
         bmi_val = st.session_state["bmi_value"]
         pct = int(((bmi_val - 15) / (40 - 15)) * 100)
         pct = max(0, min(100, pct))
+
         if bmi_val < 18.5:
             color = "blue"; status = "Underweight"
         elif bmi_val < 24.9:
@@ -253,6 +298,7 @@ with right_col:
             color = "orange"; status = "Overweight"
         else:
             color = "red"; status = "Obese"
+
         st.markdown(f"""
         <div style="
             width: 100%;
@@ -276,8 +322,9 @@ with right_col:
         st.info("Calculate BMI to see your meter.")
 
 st.markdown("</div>", unsafe_allow_html=True)
+
 # -------------------------------------------
-# SECTION — CHOLESTEROL CALCULATOR
+# CHOLESTEROL CALCULATOR
 # -------------------------------------------
 st.markdown("<div class='block-card'>", unsafe_allow_html=True)
 st.subheader("🩸 Cholesterol Calculator")
@@ -299,7 +346,6 @@ if st.button("Calculate Total Cholesterol"):
     total_chol = hdl + ldl + (trig / 5)
     st.success(f"**Your Total Cholesterol: {total_chol:.1f} mg/dL**")
 
-    # Category Classification
     if total_chol < 200:
         level = "Desirable"
         color = "green"
@@ -331,8 +377,3 @@ if st.button("Calculate Total Cholesterol"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
-
-
-
-
-
