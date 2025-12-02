@@ -148,7 +148,7 @@ chol = st.slider("Cholesterol", 120, 350)
 stress = st.slider("Stress Level", 1, 5)
 smoker = st.selectbox("Smoker?", ["No", "Yes"])
 diab = st.selectbox("Diabetes?", ["No", "Yes"])
-bmi = st.slider("BMI", 15.0, 40.0)
+bmi = st.slider("BMI", 15.0, 40.0, step=0.1, format="%.1f")
 
 gender_val = 1 if gender == "Male" else 0
 smoker_val = 1 if smoker == "Yes" else 0
@@ -331,5 +331,6 @@ if st.button("Calculate Total Cholesterol"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 
