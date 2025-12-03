@@ -160,7 +160,24 @@ if predict_pressed:
     else:
         model = st.session_state["model"]
         res = model.predict(inp)[0]
+# -------------------------------------------
+# OVERRIDE LOGIC — Force High Risk
+# -------------------------------------------
+force_high_risk = False
 
+if rest > 130:           # High Blood Pressure
+    force_high_risk = True
+if chol > 220:           # High Cholesterol
+    force_high_risk = True
+if hr > 100:             # High Heart Rate
+    force_high_risk = True
+
+# Apply override
+if force_high_risk:
+    res = 1
+
+
+        
         # -------------------------------------------
         # REASON GENERATOR (2–3 LINES)
         # -------------------------------------------
@@ -377,4 +394,5 @@ if st.button("Calculate Total Cholesterol"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
+
 
