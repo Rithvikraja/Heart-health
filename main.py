@@ -173,7 +173,7 @@ if predict_pressed:
         force_high_risk = True
 
 # Apply override
-        if force_high_risk:
+    if force_high_risk:
         res = 1
         reason_lines = []
 
@@ -388,6 +388,7 @@ if st.button("Calculate Total Cholesterol"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 
 
