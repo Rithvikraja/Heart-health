@@ -191,7 +191,7 @@ if force_high_risk:
     if hr > 100:
             reason_lines.append("Heart rate is higher than the ideal resting range.")
 
-     short_reason = " ".join(reason_lines[:3])  # only take top 2–3 reasons
+        short_reason = " ".join(reason_lines[:3])  # only take top 2–3 reasons
 
         # -------------------------------------------
         # DISPLAY PREDICTION + REASONS
@@ -385,6 +385,7 @@ if st.button("Calculate Total Cholesterol"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 
 
