@@ -174,7 +174,7 @@ force_high_risk = (
 if force_high_risk:
     res = 1
     
-        if age > 50:
+    if age > 50:
             reason_lines.append("Your age increases overall cardiovascular sensitivity.")
         if chol > 220:
             reason_lines.append("Cholesterol levels are above the healthy range.")
@@ -385,6 +385,7 @@ if st.button("Calculate Total Cholesterol"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 
 
