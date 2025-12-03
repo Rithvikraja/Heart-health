@@ -202,7 +202,7 @@ if res == 1:
 if short_reason:
                 st.write(f"**Why:** {short_reason}")
 
-            st.warning("### Recommended Tips\n"
+                st.warning("### Recommended Tips\n"
                        "- Walk 20–30 minutes daily.\n"
                        "- Eat more fruits, vegetables & whole grains.\n"
                        "- Reduce salty and fried foods.\n"
@@ -385,6 +385,7 @@ if st.button("Calculate Total Cholesterol"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 
 
