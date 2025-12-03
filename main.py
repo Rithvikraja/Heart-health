@@ -175,10 +175,7 @@ if hr > 100:             # High Heart Rate
 # Apply override
 if force_high_risk:
     res = 1
-        # -------------------------------------------
-        # REASON GENERATOR (2–3 LINES)
-        # -------------------------------------------
-        reason_lines = []
+reason_lines = []
 
         if age > 50:
             reason_lines.append("Your age increases overall cardiovascular sensitivity.")
@@ -391,5 +388,6 @@ if st.button("Calculate Total Cholesterol"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 
