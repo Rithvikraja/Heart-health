@@ -176,22 +176,22 @@ if force_high_risk:
     
     if age > 50:
             reason_lines.append("Your age increases overall cardiovascular sensitivity.")
-        if chol > 220:
+    if chol > 220:
             reason_lines.append("Cholesterol levels are above the healthy range.")
-        if rest > 130:
+    if rest > 130:
             reason_lines.append("Resting blood pressure appears elevated.")
-        if smoker_val == 1:
+    if smoker_val == 1:
             reason_lines.append("Smoking adds significant strain to heart function.")
-        if diab_val == 1:
+    if diab_val == 1:
             reason_lines.append("Diabetes increases long-term heart complications.")
-        if bmi > 27:
+    if bmi > 27:
             reason_lines.append("BMI is high, adding extra workload on the heart.")
-        if stress >= 4:
+    if stress >= 4:
             reason_lines.append("Stress levels are high, which can influence heart rhythm.")
-        if hr > 100:
+    if hr > 100:
             reason_lines.append("Heart rate is higher than the ideal resting range.")
 
-        short_reason = " ".join(reason_lines[:3])  # only take top 2–3 reasons
+     short_reason = " ".join(reason_lines[:3])  # only take top 2–3 reasons
 
         # -------------------------------------------
         # DISPLAY PREDICTION + REASONS
@@ -385,6 +385,7 @@ if st.button("Calculate Total Cholesterol"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 
 
