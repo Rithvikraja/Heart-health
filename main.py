@@ -210,7 +210,7 @@ if short_reason:
                        "- Practice breathing exercises.\n"
                        "- Maintain consistent sleep.\n"
                        "- Get regular health checkups.\n")
-         else:
+else:
             st.success("✅ Low Risk")
 
         # -------------------------------------------
@@ -385,6 +385,7 @@ if st.button("Calculate Total Cholesterol"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 
 
