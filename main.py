@@ -163,19 +163,19 @@ if predict_pressed:
 # -------------------------------------------
 # OVERRIDE LOGIC — Force High Risk
 # -------------------------------------------
-force_high_risk = False
+        force_high_risk = False
 
-if rest > 130:           # High Blood Pressure
-    force_high_risk = True
-if chol > 220:           # High Cholesterol
-    force_high_risk = True
-if hr > 100:             # High Heart Rate
-    force_high_risk = True
+        if rest > 130:           # High Blood Pressure
+        force_high_risk = True
+        if chol > 220:           # High Cholesterol
+        force_high_risk = True
+        if hr > 100:             # High Heart Rate
+        force_high_risk = True
 
 # Apply override
-if force_high_risk:
-    res = 1
-reason_lines = []
+        if force_high_risk:
+        res = 1
+        reason_lines = []
 
         if age > 50:
             reason_lines.append("Your age increases overall cardiovascular sensitivity.")
@@ -388,6 +388,7 @@ if st.button("Calculate Total Cholesterol"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 
 
