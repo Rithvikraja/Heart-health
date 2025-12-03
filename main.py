@@ -175,9 +175,6 @@ if hr > 100:             # High Heart Rate
 # Apply override
 if force_high_risk:
     res = 1
-
-
-        
         # -------------------------------------------
         # REASON GENERATOR (2–3 LINES)
         # -------------------------------------------
