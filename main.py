@@ -81,7 +81,9 @@ with c2:
 
 st.markdown("</div>", unsafe_allow_html=True)
 
-# ❤️ HEART INFORMATION SECTION
+# -------------------------------------------
+# HEART SECTION
+# -------------------------------------------
 st.subheader("❤️ Heart Information")
 
 with st.expander("Click to expand — Learn about the heart, risks & wellness"):
@@ -111,12 +113,11 @@ with st.expander("Click to expand — Learn about the heart, risks & wellness"):
     ❤️ *Small habits compound into stronger heart health over time.*  
     """)
 
-st.markdown("</div>", unsafe_allow_html=True)
-
 # -------------------------------------------
 # SECTION 2 — TRAIN MODEL
 # -------------------------------------------
 st.subheader("Train Your Model")
+
 features = df.drop("target", axis=1)
 labels = df["target"]
 
@@ -148,11 +149,16 @@ bmi = st.slider("BMI", 15.0, 40.0, step=0.1, format="%.1f")
 gender_val = 1 if gender == "Male" else 0
 smoker_val = 1 if smoker == "Yes" else 0
 diab_val = 1 if diab == "Yes" else 0
+
 inp = [[age, gender_val, rest, hr, chol, stress, smoker_val, diab_val, bmi]]
 
 cA, cB, cC = st.columns([1, 2, 1])
 with cB:
     predict_pressed = st.button("Predict", use_container_width=True)
+
+res = None
+reason_lines = []
+short_reason = ""
 
 if predict_pressed:
     if "model" not in st.session_state:
@@ -160,66 +166,70 @@ if predict_pressed:
     else:
         model = st.session_state["model"]
         res = model.predict(inp)[0]
-# -------------------------------------------
-# OVERRIDE LOGIC — Force High Risk ONLY when needed
-# -------------------------------------------
 
-force_high_risk = (
-    (rest > 140) or        # BP danger threshold
-    (chol > 240) or        # Cholesterol danger threshold
-    (hr > 110)             # Heart rate danger threshold
-)
+        # -------------------------------------------
+        # OVERRIDE LOGIC
+        # -------------------------------------------
+        force_high_risk = (
+            (rest > 140) or
+            (chol > 240) or
+            (hr > 110)
+        )
 
-# Apply override
-if force_high_risk:
-    res = 1
-    
-    if age > 50:
+        if force_high_risk:
+            res = 1
+
+        # Reasons
+        if age > 50:
             reason_lines.append("Your age increases overall cardiovascular sensitivity.")
-    if chol > 220:
+        if chol > 220:
             reason_lines.append("Cholesterol levels are above the healthy range.")
-    if rest > 130:
+        if rest > 130:
             reason_lines.append("Resting blood pressure appears elevated.")
-    if smoker_val == 1:
+        if smoker_val == 1:
             reason_lines.append("Smoking adds significant strain to heart function.")
-    if diab_val == 1:
+        if diab_val == 1:
             reason_lines.append("Diabetes increases long-term heart complications.")
-    if bmi > 27:
+        if bmi > 27:
             reason_lines.append("BMI is high, adding extra workload on the heart.")
-    if stress >= 4:
+        if stress >= 4:
             reason_lines.append("Stress levels are high, which can influence heart rhythm.")
-    if hr > 100:
+        if hr > 100:
             reason_lines.append("Heart rate is higher than the ideal resting range.")
 
-short_reason = " ".join(reason_lines[:3])  # only take top 2–3 reasons
+        short_reason = " ".join(reason_lines[:3])
 
         # -------------------------------------------
-        # DISPLAY PREDICTION + REASONS
+        # DISPLAY RESULT
         # -------------------------------------------
-if res == 1:
+        if res == 1:
             st.error("⚠ High Risk Detected")
 
-if short_reason:
+            if short_reason:
                 st.write(f"**Why:** {short_reason}")
 
-                st.warning("### Recommended Tips\n"
-                       "- Walk 20–30 minutes daily.\n"
-                       "- Eat more fruits, vegetables & whole grains.\n"
-                       "- Reduce salty and fried foods.\n"
-                       "- If you smoke, consider reducing/quitting.\n"
-                       "- Practice breathing exercises.\n"
-                       "- Maintain consistent sleep.\n"
-                       "- Get regular health checkups.\n")
-else:
+            st.warning(
+                "### Recommended Tips\n"
+                "- Walk 20–30 minutes daily.\n"
+                "- Eat more fruits, vegetables & whole grains.\n"
+                "- Reduce salty and fried foods.\n"
+                "- If you smoke, consider reducing/quitting.\n"
+                "- Practice breathing exercises.\n"
+                "- Maintain consistent sleep.\n"
+                "- Get regular health checkups.\n"
+            )
+        else:
             st.success("✅ Low Risk")
 
         # -------------------------------------------
-        # PDF REPORT — INCLUDING REASONS
+        # PDF REPORT
         # -------------------------------------------
         pdf_buffer = io.BytesIO()
         c = canvas.Canvas(pdf_buffer, pagesize=letter)
+
         c.setFont("Helvetica-Bold", 22)
         c.drawString(50, 750, "Heart Health Report")
+
         c.setFont("Helvetica", 14)
         c.drawString(50, 720, f"Name: {name}")
         c.drawString(50, 700, f"Age: {age}")
@@ -245,40 +255,26 @@ else:
                 c.drawString(60, y, f"- {line}")
                 y -= 20
 
-            c.setFont("Helvetica-Bold", 16)
-            c.drawString(50, y - 20, "Recommendations:")
-            y -= 45
-            tips = [
-                "• Daily 20–30 min walking.",
-                "• Eat more fruits & vegetables.",
-                "• Reduce salty & oily foods.",
-                "• Consider quitting smoking.",
-                "• Practice slow breathing.",
-                "• Maintain sleep schedule.",
-                "• Get regular checkups.",
-            ]
-            for t in tips:
-                c.drawString(60, y, t)
-                y -= 18
-
         c.save()
         pdf_buffer.seek(0)
 
-        st.download_button(label="⬇ Download Report (PDF)", 
-                           data=pdf_buffer, 
-                           file_name="heart_report.pdf", 
-                           mime="application/pdf",
-                           use_container_width=True)
+        st.download_button(
+            label="⬇ Download Report (PDF)",
+            data=pdf_buffer,
+            file_name="heart_report.pdf",
+            mime="application/pdf",
+            use_container_width=True
+        )
 
 st.markdown("</div>", unsafe_allow_html=True)
 
 # -------------------------------------------
-# SECTION 4 — BMI CALCULATOR + METER
+# SECTION 4 — BMI CALCULATOR
 # -------------------------------------------
 st.markdown("<div class='block-card'>", unsafe_allow_html=True)
 left_col, right_col = st.columns([1.2, 1])
 
-# BMI CALCULATOR
+# BMI Calculator
 with left_col:
     st.markdown("### Quick BMI Calculator")
     w = st.number_input("Weight (kg)", 1.0, 200.0, step=0.5, key="weight")
@@ -290,9 +286,10 @@ with left_col:
         st.session_state["bmi_value"] = calculated_bmi
         st.success(f"Your BMI: **{calculated_bmi:.2f}**")
 
-# BMI METER
+# BMI Meter
 with right_col:
     st.markdown("### BMI Meter")
+
     if "bmi_value" in st.session_state:
         bmi_val = st.session_state["bmi_value"]
         pct = int(((bmi_val - 15) / (40 - 15)) * 100)
@@ -309,19 +306,9 @@ with right_col:
 
         st.markdown(f"""
         <div style="
-            width: 100%;
-            height: 28px;
-            background: #e5e7eb;
-            border-radius: 14px;
-            overflow: hidden;
-            margin-bottom: 8px;">
-            <div style="
-                width:{pct}%;
-                height:100%;
-                background:{color};
-                border-radius: 14px;
-                transition: width 0.6s;">
-            </div>
+            width: 100%; height: 28px; background: #e5e7eb;
+            border-radius: 14px; overflow: hidden;">
+            <div style="width:{pct}%; height:100%; background:{color};"></div>
         </div>
         <div style='text-align:center; font-size:20px; font-weight:600; color:White;'>{status}</div>
         <div style='text-align:center; font-size:18px; font-weight:500; color:White;'>BMI: {bmi_val:.2f}</div>
@@ -346,37 +333,22 @@ with colA:
 
 with colB:
     st.markdown("### Formula")
-    st.markdown("""
-    **Total Cholesterol = HDL + LDL + (Triglycerides / 5)**  
-    """)
+    st.markdown("**Total Cholesterol = HDL + LDL + (Triglycerides / 5)**")
 
 if st.button("Calculate Total Cholesterol"):
     total_chol = hdl + ldl + (trig / 5)
     st.success(f"**Your Total Cholesterol: {total_chol:.1f} mg/dL**")
 
     if total_chol < 200:
-        level = "Desirable"
-        color = "green"
-        msg = "Healthy range. Maintain your lifestyle!"
+        level = "Desirable"; color = "green"; msg = "Healthy range. Maintain your lifestyle!"
     elif 200 <= total_chol <= 239:
-        level = "Borderline High"
-        color = "orange"
-        msg = "A bit elevated. Watch your food choices."
+        level = "Borderline High"; color = "orange"; msg = "A bit elevated. Watch your food choices."
     else:
-        level = "High"
-        color = "red"
-        msg = "Risky level. Consider consulting a doctor."
+        level = "High"; color = "red"; msg = "Risky level. Consider consulting a doctor."
 
     st.markdown(f"""
-        <div style="
-            background:{color};
-            padding:14px;
-            border-radius:10px;
-            text-align:center;
-            font-size:20px;
-            font-weight:600;
-            color:white;
-            margin-top:10px;">
+        <div style="background:{color}; padding:14px; border-radius:10px;
+        text-align:center; font-size:20px; font-weight:600; color:white;">
             {level}
         </div>
         <div style="margin-top:8px; font-size:16px; color:#e5e7eb;">
@@ -385,25 +357,3 @@ if st.button("Calculate Total Cholesterol"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
