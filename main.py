@@ -161,22 +161,18 @@ if predict_pressed:
         model = st.session_state["model"]
         res = model.predict(inp)[0]
 # -------------------------------------------
-# OVERRIDE LOGIC — Force High Risk
+# OVERRIDE LOGIC — Force High Risk ONLY when needed
 # -------------------------------------------
-    force_high_risk = False
 
-    if rest > 130:           # High Blood Pressure
-        force_high_risk = True
-    if chol > 220:           # High Cholesterol
-        force_high_risk = True
-    if hr > 100:             # High Heart Rate
-        force_high_risk = True
+force_high_risk = (
+    (rest > 140) or        # BP danger threshold
+    (chol > 240) or        # Cholesterol danger threshold
+    (hr > 110)             # Heart rate danger threshold
+)
 
 # Apply override
-    if force_high_risk:
-        res = 1
-        reason_lines = []
-
+if force_high_risk:
+    res = 1
         if age > 50:
             reason_lines.append("Your age increases overall cardiovascular sensitivity.")
         if chol > 220:
@@ -388,6 +384,7 @@ if st.button("Calculate Total Cholesterol"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 
 
