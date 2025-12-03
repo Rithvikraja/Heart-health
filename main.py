@@ -163,7 +163,7 @@ if predict_pressed:
 # -------------------------------------------
 # OVERRIDE LOGIC — Force High Risk
 # -------------------------------------------
-        force_high_risk = False
+    force_high_risk = False
 
         if rest > 130:           # High Blood Pressure
         force_high_risk = True
@@ -388,6 +388,7 @@ if st.button("Calculate Total Cholesterol"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 
 
