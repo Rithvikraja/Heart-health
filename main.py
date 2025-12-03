@@ -196,10 +196,10 @@ short_reason = " ".join(reason_lines[:3])  # only take top 2–3 reasons
         # -------------------------------------------
         # DISPLAY PREDICTION + REASONS
         # -------------------------------------------
-         if res == 1:
+if res == 1:
             st.error("⚠ High Risk Detected")
 
-         if short_reason:
+if short_reason:
                 st.write(f"**Why:** {short_reason}")
 
             st.warning("### Recommended Tips\n"
@@ -385,6 +385,7 @@ if st.button("Calculate Total Cholesterol"):
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 
 
